@@ -64,6 +64,28 @@ void APIPBaseUnit::ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUni
 	}
 }
 
+void APIPBaseUnit::GainCharge(float DeltaTime)
+{
+	//	TODO: implement global base charge speed
+	int speedBreakpoints = Speed / 2;
+	float chargeMultiplier = speedBreakpoints * 0.05f;
+
+	if (AccumulatedTime >= chargeMultiplier * 1.5f)
+	{
+		if (!CanAct)
+		{
+			CanAct = true;
+
+			//	TODO: Add this to the queue of units that can act
+		}
+	}
+	else
+	{
+		//	TODO: check if the player is in a menu before incrementing time
+		AccumulatedTime += DeltaTime;
+	}
+}
+
 int APIPBaseUnit::GetPhysicalAttack()
 {
 	return PhysicalAttack;

@@ -28,7 +28,7 @@ public:
 
 	void TakeDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor);
 	void ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUnit* _otherActor);
-
+	void GainCharge(float DeltaTime);
 	int GetPhysicalAttack();
 	int GetMagicalAttack();
 
@@ -55,7 +55,10 @@ private:
 	//	the experience this unit is worth
 	int ExperienceVal = 30;
 	//	the fill of the charge meter (normalized 0-1)
-	float ChargeMeterFill = 0.0;
+	float ChargeMeterFill = 0.0f;
+	float AccumulatedTime = 0.0f;
+
+	bool CanAct = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions", meta = (AllowPrivateAccess = true))
 	TArray<UPIBaseAction*> Actions;
 };

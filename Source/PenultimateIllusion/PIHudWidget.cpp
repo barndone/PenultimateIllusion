@@ -7,6 +7,9 @@
 #include "Components/ScrollBox.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/TextBlock.h"
+#include "PIPartyMemberElement.h"
+#include "PIPlayerController.h"
+#include "Components/VerticalBox.h"
 
 void UPIHudWidget::NativeConstruct()
 {
@@ -19,6 +22,13 @@ void UPIHudWidget::NativeConstruct()
 		gameMode->OnActingUnitChange.AddDynamic(this, &UPIHudWidget::HandleNewActingUnit);
 	}
 
+	APIPlayerController* controller = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (controller != nullptr)
+	{
+		controller->OnPartyInit.AddDynamic(this, &UPIHudWidget::InitializePartyHud);
+	}
+
+	controller->OnPartyInit.Broadcast(controller->GetParty());
 }
 
 void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
@@ -59,5 +69,18 @@ void UPIHudWidget::InitializeAvailableSkills()
 		title->SetText(currentUnit->Actions[i]->SpellName);
 		button->AddChild(title);
 		InitializedButtons.Add(button);
+	}
+}
+
+void UPIHudWidget::InitializePartyHud(TArray<APIPBaseUnit*> partyToInit)
+{
+	for (int i = 0; i < partyToInit.Num(); i++)
+	{
+		UPIPartyMemberElement* partyBar = Cast<UPIPartyMemberElement>(CreateWidget<UUserWidget>(GetWorld(), PartyStatWidget));
+		if (partyBar != nullptr)
+		{
+			PartyStatsHud->AddChild(partyBar);
+			partyBar->PairNewUnit(partyToInit[i]);
+		}
 	}
 }

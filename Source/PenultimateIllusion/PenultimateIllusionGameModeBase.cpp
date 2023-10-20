@@ -3,10 +3,20 @@
 
 #include "PenultimateIllusionGameModeBase.h"
 #include "PIBattleHud.h"
+#include "PIPlayerController.h"
 
 APenultimateIllusionGameModeBase::APenultimateIllusionGameModeBase()
 {
 	HUDClass = APIBattleHud::StaticClass();
+	PlayerControllerClass = APIPlayerController::StaticClass();
+	
+}
+
+void APenultimateIllusionGameModeBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//	TODO: set up number of enemies to spawn/types/etc
 }
 
 void APenultimateIllusionGameModeBase::AddReadyUnit(APIPBaseUnit* unit)

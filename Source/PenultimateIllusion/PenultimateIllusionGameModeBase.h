@@ -24,6 +24,10 @@ public:
 	UPROPERTY()
 	APIPBaseUnit* ActingUnit;
 
+	UPROPERTY(EditAnywhere)
+	int EnemiesToSpawn;
+
+
 	APenultimateIllusionGameModeBase();
 
 	void AddReadyUnit(APIPBaseUnit* unit);
@@ -32,4 +36,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnActingUnitChange OnActingUnitChange;
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+		UClass* BaseAIControllerAsset;
 };

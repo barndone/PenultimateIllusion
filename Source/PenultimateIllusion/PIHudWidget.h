@@ -21,6 +21,8 @@ public:
 	void HandleNewActingUnit(APIPBaseUnit* unit);
 	UFUNCTION()
 	void InitializeAvailableSkills();
+	UFUNCTION()
+	void InitializePartyHud(TArray<APIPBaseUnit*> partyToInit);
 	UPROPERTY()
 	FClickDelegate click;
 protected:
@@ -28,10 +30,14 @@ protected:
 
 private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, BindWidget))
-		class UScrollBox* ParentObject;
+	class UScrollBox* ParentObject;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, BindWidget))
+	class UVerticalBox* PartyStatsHud;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TArray<class UButton*> InitializedButtons;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	APIPBaseUnit* currentUnit;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<UUserWidget> PartyStatWidget;
 };

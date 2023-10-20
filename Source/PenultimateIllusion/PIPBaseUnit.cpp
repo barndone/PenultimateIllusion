@@ -35,6 +35,12 @@ void APIPBaseUnit::Tick(float DeltaTime)
 	GainCharge(DeltaTime);
 }
 
+void APIPBaseUnit::TakeAction(const UPIBaseAction* action)
+{
+	//	first cast to damage
+
+	//	then try to cast to health if it fails
+}
 
 void APIPBaseUnit::TakeDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor)
 {
@@ -60,6 +66,8 @@ void APIPBaseUnit::TakeDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* 
 	}
 
 	CurrentHealth -= damageToTake;
+
+	OnHealthUpdate.Broadcast(CurrentHealth, MaxHealth);
 }
 
 void APIPBaseUnit::ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUnit* _otherActor)
@@ -75,6 +83,8 @@ void APIPBaseUnit::ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUni
 	{
 		CurrentHealth = MaxHealth;
 	}
+
+	OnHealthUpdate.Broadcast(CurrentHealth, MaxHealth);
 }
 
 void APIPBaseUnit::GainCharge(float DeltaTime)
@@ -83,8 +93,9 @@ void APIPBaseUnit::GainCharge(float DeltaTime)
 	{
 		if (!CanAct)
 		{
+			OnChargeUpdate.Broadcast(ChargeTime / ChargeTime);
 			CanAct = true;
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("UNIT CAN ACT!"));
+			
 			//	TODO: Add this to the queue of units that can act
 
 			APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -98,6 +109,8 @@ void APIPBaseUnit::GainCharge(float DeltaTime)
 	{
 		//	TODO: check if the player is in a menu before incrementing time
 		AccumulatedTime += DeltaTime;
+
+		OnChargeUpdate.Broadcast(AccumulatedTime / ChargeTime);
 	}
 }
 
@@ -111,6 +124,16 @@ int APIPBaseUnit::GetMagicalAttack()
 	return MagicalAttack;
 }
 
+int APIPBaseUnit::GetPhysicalDefense()
+{
+	return PhysicalDefense;
+}
+
+int APIPBaseUnit::GetMagicalDefense()
+{
+	return MagicalDefense;
+}
+
 void APIPBaseUnit::CalculateChargeMultiplier()
 {
 	int speedBreakpoints = Speed / 2;
@@ -122,5 +145,20 @@ void APIPBaseUnit::CalculateChargeMultiplier()
 bool APIPBaseUnit::IsDead()
 {
 	return CurrentHealth <= 0;
+}
+
+int APIPBaseUnit::GetCurrentHealth()
+{
+	return CurrentHealth;
+}
+
+int APIPBaseUnit::GetMaxHealth()
+{
+	return MaxHealth;
+}
+
+float APIPBaseUnit::GetChargeValue()
+{
+	return AccumulatedTime / ChargeTime;
 }
 

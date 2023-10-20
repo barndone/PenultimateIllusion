@@ -9,6 +9,9 @@
 #include "PIBaseHealingSpell.h"
 #include "PIPBaseUnit.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChargeUpdate, const float&, fillAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdate, const int&, curHealth, const int&,  maxHealth);
+
 UCLASS()
 class PENULTIMATEILLUSION_API APIPBaseUnit : public AActor
 {
@@ -32,10 +35,30 @@ public:
 
 	void TakeDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor);
 	void ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUnit* _otherActor);
+	UFUNCTION()
 	void GainCharge(float DeltaTime);
+	UFUNCTION()
 	int GetPhysicalAttack();
+	UFUNCTION()
 	int GetMagicalAttack();
 
+	UFUNCTION()
+		int GetPhysicalDefense();
+	UFUNCTION()
+		int GetMagicalDefense();
+
+	UFUNCTION()
+	int GetCurrentHealth();
+	UFUNCTION()
+	int GetMaxHealth();
+	UFUNCTION()
+	float GetChargeValue();
+
+	UFUNCTION()
+		void TakeAction(const UPIBaseAction* action);
+
+	FOnHealthUpdate OnHealthUpdate;
+	FOnChargeUpdate OnChargeUpdate;
 
 private:
 	//	the level of this unit

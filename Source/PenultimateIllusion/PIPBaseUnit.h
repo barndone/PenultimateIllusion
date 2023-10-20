@@ -23,6 +23,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
+		TArray<UPIBaseAction*> Actions;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -35,30 +39,42 @@ public:
 
 private:
 	//	the level of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int Level = 1;
 	//	the max health of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int MaxHealth = 10;
 	//	 the current health of this unit (Initialized to maxHealth in constructor)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int CurrentHealth;
 	//	the physical attack of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int PhysicalAttack = 5;
 	//	 the physical defense of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int PhysicalDefense = 5;
 	//	 the magical attack of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int MagicalAttack = 5;
 	//	 the magical defense of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int MagicalDefense = 5;
 	//	 the speed of this unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int Speed = 5;
 	//	the experience this unit has accumulated
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int Experience = 0;
 	//	the experience this unit is worth
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	int ExperienceVal = 30;
-	//	the fill of the charge meter (normalized 0-1)
-	float ChargeMeterFill = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	float AccumulatedTime = 0.0f;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
+	float ChargeTime = 0.0f;
 	bool CanAct = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions", meta = (AllowPrivateAccess = true))
-	TArray<UPIBaseAction*> Actions;
+
+
+	void CalculateChargeMultiplier();
+	bool IsDead();
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "PIPBaseUnit.h"
 #include "PIPlayerController.generated.h"
 
 /**
@@ -26,5 +27,6 @@ public:
 	
 
 private:
-	//	TODO: include list of units
+	UPROPERTY(EditAnywhere)
+	TArray<APIPBaseUnit*> Party;
 };

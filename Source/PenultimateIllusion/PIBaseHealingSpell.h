@@ -17,6 +17,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float MagicMultiplier = 1.25f;
+
+	UPROPERTY(EditAnywhere)
+		int UnlockLevel = 1;
 };
 
 UCLASS()
@@ -25,8 +28,6 @@ class PENULTIMATEILLUSION_API UPIBaseHealingSpell : public UPIBaseAction
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(EditAnywhere)
-		FText SpellName;
 
 	UPROPERTY(EditAnywhere)
 	FPIHealingSpellData SpellData;

@@ -2,24 +2,37 @@
 
 
 #include "PIPBaseUnit.h"
+#include "PenultimateIllusionGameModeBase.h"
 
 // Sets default values
 APIPBaseUnit::APIPBaseUnit()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	CurrentHealth = MaxHealth;
 }
 
 // Called when the game starts or when spawned
 void APIPBaseUnit::BeginPlay()
 {
 	Super::BeginPlay();
+
+	APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
+	//	if this case did not fail AKA is not null
+	if (gameMode != nullptr)
+	{
+		ChargeTime = gameMode->BaseChargeTime;
+		CalculateChargeMultiplier();
+	}
+	//	otherwise do nothing
+
 }
 
 // Called every frame
 void APIPBaseUnit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	GainCharge(DeltaTime);
 }
 
 
@@ -66,17 +79,19 @@ void APIPBaseUnit::ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUni
 
 void APIPBaseUnit::GainCharge(float DeltaTime)
 {
-	//	TODO: implement global base charge speed
-	int speedBreakpoints = Speed / 2;
-	float chargeMultiplier = speedBreakpoints * 0.05f;
-
-	if (AccumulatedTime >= chargeMultiplier * 1.5f)
+	if (AccumulatedTime >= ChargeTime)
 	{
 		if (!CanAct)
 		{
 			CanAct = true;
-
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, TEXT("UNIT CAN ACT!"));
 			//	TODO: Add this to the queue of units that can act
+
+			APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
+			if (gameMode != nullptr)
+			{
+				gameMode->AddReadyUnit(this);
+			}
 		}
 	}
 	else
@@ -94,5 +109,18 @@ int APIPBaseUnit::GetPhysicalAttack()
 int APIPBaseUnit::GetMagicalAttack()
 {
 	return MagicalAttack;
+}
+
+void APIPBaseUnit::CalculateChargeMultiplier()
+{
+	int speedBreakpoints = Speed / 2;
+	float chargeMultiplier = speedBreakpoints * 0.05f;
+
+	ChargeTime = ChargeTime - chargeMultiplier;
+}
+
+bool APIPBaseUnit::IsDead()
+{
+	return CurrentHealth <= 0;
 }
 

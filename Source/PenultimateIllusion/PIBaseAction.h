@@ -13,4 +13,8 @@ UCLASS()
 class PENULTIMATEILLUSION_API UPIBaseAction : public UDataAsset
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+		FText SpellName;
 };

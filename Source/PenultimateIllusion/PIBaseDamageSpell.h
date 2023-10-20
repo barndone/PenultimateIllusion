@@ -29,17 +29,16 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float DamageMultiplier = 1.25f;
+
+	UPROPERTY(EditAnywhere)
+		int UnlockLevel = 1;
 };
 
 UCLASS(BlueprintType)
 class PENULTIMATEILLUSION_API UPIBaseDamageSpell : public UPIBaseAction
 {
 	GENERATED_BODY()
-
 public:
-	UPROPERTY(EditAnywhere)
-	FText SpellName;
-
 	UPROPERTY(EditAnywhere)
 	FPIDamageSpellData SpellData;
 };

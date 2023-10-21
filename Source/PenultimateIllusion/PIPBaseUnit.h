@@ -30,10 +30,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
 		TArray<UPIBaseAction*> Actions;
 
+	UPROPERTY()
+		APIPBaseUnit* Target;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void TakeDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor);
+	void ApplyDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor);
 	void ApplyHealing(const UPIBaseHealingSpell& _ability, APIPBaseUnit* _otherActor);
 	UFUNCTION()
 	void GainCharge(float DeltaTime);
@@ -53,9 +56,12 @@ public:
 	int GetMaxHealth();
 	UFUNCTION()
 	float GetChargeValue();
-
 	UFUNCTION()
-		void TakeAction(const UPIBaseAction* action);
+		bool CanHeal();
+	UFUNCTION()
+		float GetHealthPercent();
+	UFUNCTION()
+		void TakeAction(UPIBaseAction* action);
 
 	FOnHealthUpdate OnHealthUpdate;
 	FOnChargeUpdate OnChargeUpdate;
@@ -96,7 +102,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
 	float ChargeTime = 0.0f;
 	bool CanAct = false;
+	bool IsHealer = false;
 
+	UPROPERTY()
+	class APenultimateIllusionGameModeBase* gameMode;
 
 	void CalculateChargeMultiplier();
 	bool IsDead();

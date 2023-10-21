@@ -11,9 +11,9 @@ PIPickAttackDecision::~PIPickAttackDecision()
 {
 }
 
-IDecision* MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+IDecision* PIPickAttackDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
 {
-	UPIBaseDamageSpell* bestAction;
+	UPIBaseDamageSpell* bestAction{};
 	int damageToBeat = 0;
 	for (int i = 0; i < actingUnit->Actions.Num(); i++)
 	{
@@ -39,7 +39,7 @@ IDecision* MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, 
 		}
 	}
 
-
+	actingUnit->TakeAction(bestAction);
 
 	return nullptr;
 }

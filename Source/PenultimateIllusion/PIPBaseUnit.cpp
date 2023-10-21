@@ -17,7 +17,7 @@ void APIPBaseUnit::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
+	gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
 	//	if this case did not fail AKA is not null
 	if (gameMode != nullptr)
 	{
@@ -35,14 +35,34 @@ void APIPBaseUnit::Tick(float DeltaTime)
 	GainCharge(DeltaTime);
 }
 
-void APIPBaseUnit::TakeAction(const UPIBaseAction* action)
+void APIPBaseUnit::TakeAction(UPIBaseAction* action)
 {
 	//	first cast to damage
+	UPIBaseDamageSpell* attack = Cast<UPIBaseDamageSpell>(action);
 
-	//	then try to cast to health if it fails
+	if (attack != nullptr)
+	{
+		//	do the attack
+		Target->ApplyDamage(*attack, this);
+	}
+	else
+	{
+		UPIBaseHealingSpell* heal = Cast<UPIBaseHealingSpell>(action);
+		if (heal != nullptr)
+		{
+			//do the heal
+			Target->ApplyHealing(*heal, this);
+		}
+	}
+
+
+	CanAct = false;
+	AccumulatedTime = 0.0f;
+	Target = nullptr;
+	gameMode->RemoveUnitAfterAction(this);
 }
 
-void APIPBaseUnit::TakeDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor)
+void APIPBaseUnit::ApplyDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit* _otherActor)
 {
 	int damageToTake = 0;
 
@@ -96,9 +116,7 @@ void APIPBaseUnit::GainCharge(float DeltaTime)
 			OnChargeUpdate.Broadcast(ChargeTime / ChargeTime);
 			CanAct = true;
 			
-			//	TODO: Add this to the queue of units that can act
 
-			APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
 			if (gameMode != nullptr)
 			{
 				gameMode->AddReadyUnit(this);
@@ -162,3 +180,12 @@ float APIPBaseUnit::GetChargeValue()
 	return AccumulatedTime / ChargeTime;
 }
 
+bool APIPBaseUnit::CanHeal()
+{
+	return IsHealer;
+}
+
+float APIPBaseUnit::GetHealthPercent()
+{
+	return (float)(CurrentHealth / MaxHealth);
+}

@@ -10,3 +10,16 @@ PICanHealDecision::PICanHealDecision()
 PICanHealDecision::~PICanHealDecision()
 {
 }
+
+IDecision* PICanHealDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+{
+	if (actingUnit->CanHeal())
+	{
+		return TrueBranch->MakeDecision(actingUnit, allies, enemies);
+	}
+	else
+	{
+		return FalseBranch->MakeDecision(actingUnit, allies, enemies);
+	}
+
+}

@@ -17,4 +17,10 @@ class PENULTIMATEILLUSION_API UPIBaseAction : public UDataAsset
 public:
 	UPROPERTY(EditAnywhere)
 		FText SpellName;
+	UPROPERTY(EditAnywhere)
+		bool Heal;
+	UPROPERTY(EditAnywhere)
+		bool Status;
+	UPROPERTY(EditAnywhere)
+		bool Damage;
 };

@@ -7,10 +7,15 @@
 /**
  * 
  */
-class PENULTIMATEILLUSION_API PIPickAttackDecision : IDecision
+class PENULTIMATEILLUSION_API PIPickAttackDecision : public IDecision
 {
 public:
 	PIPickAttackDecision();
 	~PIPickAttackDecision();
+
+	UPROPERTY(EditAnywhere)
+		IDecision* TrueBranch;
+
+	
 	IDecision* MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies);
 };

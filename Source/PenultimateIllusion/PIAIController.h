@@ -4,7 +4,15 @@
 #include "PIPBaseUnit.h"
 
 #include "CoreMinimal.h"
+#include "IDecision.h"
 #include "AIController.h"
+
+#include "PICanHealDecision.h"
+#include "PICheckHealthDecision.h"
+#include "PIPickEnemyDecision.h"
+#include "PIPickAttackDecision.h"
+
+
 #include "PIAIController.generated.h"
 
 /**
@@ -15,6 +23,9 @@ class PENULTIMATEILLUSION_API APIAIController : public AAIController
 {
 	GENERATED_BODY()
 
+public:
+	APIAIController();
+	~APIAIController();
 protected:
 	virtual void BeginPlay() override;
 
@@ -32,10 +43,16 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	APIPBaseUnit* ActiveUnit;
 
+	IDecision* RootDecision;
+
+	TArray<IDecision*> Decisions;
 
 	UFUNCTION()
 	void GenerateEnemyComp(const int& difficultyRating);
 	UFUNCTION()
 	void AssignActiveUnit(APIPBaseUnit* unit);
+
+	UFUNCTION()
+		void MakeDecision();
 
 };

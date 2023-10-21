@@ -27,10 +27,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	int EnemiesToSpawn;
 
-
 	APenultimateIllusionGameModeBase();
 
+	UFUNCTION()
 	void AddReadyUnit(APIPBaseUnit* unit);
+	UFUNCTION()
 	void RemoveUnitAfterAction(APIPBaseUnit* unit);
 	void ActingUnitSwap();
 

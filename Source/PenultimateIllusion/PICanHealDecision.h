@@ -8,10 +8,16 @@
 /**
  * 
  */
-class PENULTIMATEILLUSION_API PICanHealDecision : IDecision
+class PENULTIMATEILLUSION_API PICanHealDecision : public IDecision
 {
 public:
 	PICanHealDecision();
 	~PICanHealDecision();
 
+	UPROPERTY(EditAnywhere)
+	IDecision* TrueBranch;
+	UPROPERTY(EditAnywhere)
+	IDecision* FalseBranch;
+
+	IDecision* MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies);
 };

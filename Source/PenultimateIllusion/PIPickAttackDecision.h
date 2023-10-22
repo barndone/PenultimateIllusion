@@ -17,5 +17,5 @@ public:
 		IDecision* TrueBranch;
 
 	
-	IDecision* MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies);
+	IDecision* MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*>& allies, TArray<APIPBaseUnit*>& enemies) override;
 };

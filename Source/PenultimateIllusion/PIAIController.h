@@ -34,10 +34,14 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<APIPBaseUnit*> Party;
 
+	//	the player Party
+	UPROPERTY()
+		TArray<APIPBaseUnit*> PlayerParty;
+
 private:
 	//	list of possible enemies this controller can spawn per round
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TArray<APIPBaseUnit*> PossibleEnemies;
+	TArray<UClass*> PossibleEnemyBP;
 
 	//	the currently active unit (if there is one)
 	UPROPERTY(VisibleAnywhere)
@@ -54,5 +58,8 @@ private:
 
 	UFUNCTION()
 		void MakeDecision();
+
+	UFUNCTION()
+		void PopulatePlayerPartyRef(TArray<APIPBaseUnit*> playerP);
 
 };

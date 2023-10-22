@@ -17,6 +17,8 @@ void APenultimateIllusionGameModeBase::BeginPlay()
 	Super::BeginPlay();
 
 	//	TODO: set up number of enemies to spawn/types/etc
+
+	enemyController = Cast<APIAIController>(GetWorld()->SpawnActor(BaseAIControllerAsset));
 }
 
 void APenultimateIllusionGameModeBase::AddReadyUnit(APIPBaseUnit* unit)

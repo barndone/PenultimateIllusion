@@ -11,7 +11,7 @@ PICheckHealthDecision::~PICheckHealthDecision()
 {
 }
 
-IDecision* PICheckHealthDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+IDecision* PICheckHealthDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*>& allies, TArray<APIPBaseUnit*>& enemies)
 {
 	//	ref for potential target
 	APIPBaseUnit* potentialTarget{};

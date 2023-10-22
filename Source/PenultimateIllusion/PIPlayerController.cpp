@@ -59,3 +59,8 @@ TArray<APIPBaseUnit*> APIPlayerController::GetParty()
 {
 	return Party;
 }
+
+bool APIPlayerController::ContainsUnit(APIPBaseUnit* unit)
+{
+	return Party.Contains(unit);
+}

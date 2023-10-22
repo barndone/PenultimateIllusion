@@ -25,7 +25,7 @@ protected:
 public:
 	virtual void Tick(float _deltaTime) override;
 	TArray<APIPBaseUnit*> GetParty();
-
+	bool ContainsUnit(APIPBaseUnit* unit);
 	FOnPartyInit OnPartyInit;
 
 private:

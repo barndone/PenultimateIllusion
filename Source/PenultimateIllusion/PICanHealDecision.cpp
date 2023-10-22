@@ -11,7 +11,7 @@ PICanHealDecision::~PICanHealDecision()
 {
 }
 
-IDecision* PICanHealDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+IDecision* PICanHealDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*>& allies, TArray<APIPBaseUnit*>& enemies)
 {
 	if (actingUnit->CanHeal())
 	{

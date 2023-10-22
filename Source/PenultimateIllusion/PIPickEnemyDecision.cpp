@@ -11,7 +11,7 @@ PIPickEnemyDecision::~PIPickEnemyDecision()
 {
 }
 
-IDecision* PIPickEnemyDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+IDecision* PIPickEnemyDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*>& allies, TArray<APIPBaseUnit*>& enemies)
 {
 	//	arbitrary high value to compare against
 	int lowestDefense = 100;

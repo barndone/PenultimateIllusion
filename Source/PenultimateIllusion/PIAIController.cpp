@@ -2,10 +2,10 @@
 
 
 #include "PIAIController.h"
+#include "PIPlayerController.h"
 
 APIAIController::APIAIController()
 {
-	//	TODO: set up decision tree
 	PICanHealDecision* canHealDecision = new PICanHealDecision();
 	PICheckHealthDecision* checkAllyHealthDecision = new PICheckHealthDecision();
 	PIPickEnemyDecision* pickEnemyTargetDecision = new PIPickEnemyDecision();
@@ -26,7 +26,6 @@ APIAIController::APIAIController()
 	Decisions.Add(checkAllyHealthDecision);
 	Decisions.Add(pickEnemyTargetDecision);
 	Decisions.Add(pickAttackDecision);
-
 }
 
 APIAIController::~APIAIController()
@@ -34,7 +33,7 @@ APIAIController::~APIAIController()
 	for (int i = 0; i < Decisions.Num(); i++)
 	{
 		//	figure out how to clean up this memory correctly
-		auto _ = Destroy(Decisions[i]);
+		delete Decisions[i];
 	}
 
 	Decisions.Empty();
@@ -44,12 +43,32 @@ void APIAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
+	//	if this case did not fail AKA is not null
+	if (gameMode != nullptr)
+	{
+		gameMode->OnActingUnitChange.AddDynamic(this, &APIAIController::AssignActiveUnit);
+	}
 
+	APIPlayerController* playerController = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (playerController != nullptr)
+	{
+		playerController->OnPartyInit.AddDynamic(this, &APIAIController::PopulatePlayerPartyRef);
+	}
+
+	GenerateEnemyComp(1);
 }
 
 void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 {
-	//TODO: Implement difficulty rating logic~
+	//	TODO: Implement difficulty rating logic~
+	
+	//	HACK: placeholder implementation
+	APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[0]));
+	if (enemy != nullptr)
+	{
+		Party.Add(enemy);
+	}
 }
 
 void APIAIController::AssignActiveUnit(APIPBaseUnit* unit)
@@ -57,7 +76,7 @@ void APIAIController::AssignActiveUnit(APIPBaseUnit* unit)
 	if (Party.Contains(unit))
 	{
 		ActiveUnit = unit;
-		//	TODO: Begin Decision Making Process
+		MakeDecision();
 	}
 	else
 	{
@@ -71,6 +90,13 @@ void APIAIController::MakeDecision()
 
 	do
 	{
-
+		currentDecision = currentDecision->MakeDecision(ActiveUnit, Party, PlayerParty);
 	} while (currentDecision != nullptr);
+
+	ActiveUnit = nullptr;
+}
+
+void APIAIController::PopulatePlayerPartyRef(TArray<APIPBaseUnit*> playerP)
+{
+	PlayerParty = playerP;
 }

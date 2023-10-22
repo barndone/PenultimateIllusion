@@ -23,6 +23,7 @@ public:
 	void InitializeAvailableSkills();
 	UFUNCTION()
 	void InitializePartyHud(TArray<APIPBaseUnit*> partyToInit);
+
 	UPROPERTY()
 	FClickDelegate click;
 protected:
@@ -40,4 +41,7 @@ private:
 	APIPBaseUnit* currentUnit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TSubclassOf<UUserWidget> PartyStatWidget;
+
+	UPROPERTY()
+	class APIPlayerController* controller;
 };

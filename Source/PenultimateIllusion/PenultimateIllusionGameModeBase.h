@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "PIPBaseUnit.h"
+#include "PIAIController.h"
 #include "PenultimateIllusionGameModeBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActingUnitChange, APIPBaseUnit*, unit);
@@ -44,4 +45,7 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 		UClass* BaseAIControllerAsset;
+
+	UPROPERTY()
+	APIAIController* enemyController;
 };

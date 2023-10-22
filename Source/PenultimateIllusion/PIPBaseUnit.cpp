@@ -35,6 +35,11 @@ void APIPBaseUnit::Tick(float DeltaTime)
 	GainCharge(DeltaTime);
 }
 
+void APIPBaseUnit::NormalAttack()
+{
+	TakeAction(BasicAttack);
+}
+
 void APIPBaseUnit::TakeAction(UPIBaseAction* action)
 {
 	//	first cast to damage

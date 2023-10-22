@@ -11,7 +11,7 @@ IDecision::~IDecision()
 {
 }
 
-IDecision* IDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+IDecision* IDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*>& allies, TArray<APIPBaseUnit*>& enemies)
 {
     return nullptr;
 }

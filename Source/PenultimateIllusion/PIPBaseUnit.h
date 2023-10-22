@@ -26,12 +26,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
+		UPIBaseAction* BasicAttack;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
 		TArray<UPIBaseAction*> Actions;
 
 	UPROPERTY()
 		APIPBaseUnit* Target;
+
+
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -60,6 +63,9 @@ public:
 		bool CanHeal();
 	UFUNCTION()
 		float GetHealthPercent();
+
+	UFUNCTION()
+		void NormalAttack();
 	UFUNCTION()
 		void TakeAction(UPIBaseAction* action);
 

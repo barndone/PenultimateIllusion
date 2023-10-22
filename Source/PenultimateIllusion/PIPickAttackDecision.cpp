@@ -11,7 +11,7 @@ PIPickAttackDecision::~PIPickAttackDecision()
 {
 }
 
-IDecision* PIPickAttackDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*> allies, TArray<APIPBaseUnit*> enemies)
+IDecision* PIPickAttackDecision::MakeDecision(APIPBaseUnit* actingUnit, TArray<APIPBaseUnit*>& allies, TArray<APIPBaseUnit*>& enemies)
 {
 	UPIBaseDamageSpell* bestAction{};
 	int damageToBeat = 0;

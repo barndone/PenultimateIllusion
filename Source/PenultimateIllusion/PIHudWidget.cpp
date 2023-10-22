@@ -22,7 +22,7 @@ void UPIHudWidget::NativeConstruct()
 		gameMode->OnActingUnitChange.AddDynamic(this, &UPIHudWidget::HandleNewActingUnit);
 	}
 
-	APIPlayerController* controller = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
+	controller = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (controller != nullptr)
 	{
 		controller->OnPartyInit.AddDynamic(this, &UPIHudWidget::InitializePartyHud);
@@ -33,22 +33,27 @@ void UPIHudWidget::NativeConstruct()
 
 void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
 {
-	currentUnit = unit;
-	UButton* attack = NewObject<UButton>(UButton::StaticClass(), TEXT("attack"));
-	UTextBlock* attackTitle = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
-	attackTitle->SetText(FText::FromString("Attack"));
-	attack->AddChild(attackTitle);
-	ParentObject->AddChild(attack);
-	InitializedButtons.Add(attack);
+	if (controller->ContainsUnit(unit))
+	{
+		currentUnit = unit;
+		UButton* attack = NewObject<UButton>(UButton::StaticClass(), TEXT("attack"));
+		UTextBlock* attackTitle = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
+		attackTitle->SetText(FText::FromString("Attack"));
+		attack->AddChild(attackTitle);
+		ParentObject->AddChild(attack);
+		InitializedButtons.Add(attack);
 
-	UButton* skill = NewObject<UButton>(UButton::StaticClass(), TEXT("skill"));
-	UTextBlock* skillTitle = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
-	skillTitle->SetText(FText::FromString("Skills"));
-	skill->AddChild(skillTitle);
-	ParentObject->AddChild(skill);
-	InitializedButtons.Add(skill);
+		UButton* skill = NewObject<UButton>(UButton::StaticClass(), TEXT("skill"));
+		UTextBlock* skillTitle = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
+		skillTitle->SetText(FText::FromString("Skills"));
+		skill->AddChild(skillTitle);
+		ParentObject->AddChild(skill);
+		InitializedButtons.Add(skill);
 
-	skill->OnClicked.AddDynamic(this, &UPIHudWidget::InitializeAvailableSkills);
+		attack->OnClicked.AddDynamic(currentUnit, &APIPBaseUnit::NormalAttack);
+		//	TODO: bind attack OnClick to unit's auto attack
+		skill->OnClicked.AddDynamic(this, &UPIHudWidget::InitializeAvailableSkills);
+	}
 }
 
 void UPIHudWidget::InitializeAvailableSkills()

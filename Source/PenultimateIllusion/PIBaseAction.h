@@ -23,4 +23,7 @@ public:
 		bool Status;
 	UPROPERTY(EditAnywhere)
 		bool Damage;
+
+	UPROPERTY(EditAnywhere)
+		bool TargetEnemies;
 };

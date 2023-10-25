@@ -25,6 +25,7 @@ public:
 	UPROPERTY()
 	APIPBaseUnit* ActingUnit;
 
+
 	UPROPERTY(EditAnywhere)
 	int EnemiesToSpawn;
 
@@ -35,6 +36,8 @@ public:
 	UFUNCTION()
 	void RemoveUnitAfterAction(APIPBaseUnit* unit);
 	void ActingUnitSwap();
+
+	APIAIController* GetAIController();
 
 	UPROPERTY(BlueprintAssignable)
 	FOnActingUnitChange OnActingUnitChange;

@@ -59,11 +59,17 @@ void APIAIController::BeginPlay()
 	GenerateEnemyComp(1);
 }
 
+TArray<APIPBaseUnit*> APIAIController::GetParty()
+{
+	return Party;
+}
+
 void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 {
-	//	TODO: Implement difficulty rating logic~
 	
 	//	HACK: placeholder implementation
+	//	TODO: integrate actual comp generation
+	//	TODO: Implement difficulty rating logic~
 	APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[0]));
 	if (enemy != nullptr)
 	{

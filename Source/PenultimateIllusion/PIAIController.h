@@ -38,6 +38,9 @@ public:
 	UPROPERTY()
 		TArray<APIPBaseUnit*> PlayerParty;
 
+	UFUNCTION()
+		TArray<APIPBaseUnit*> GetParty();
+
 private:
 	//	list of possible enemies this controller can spawn per round
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

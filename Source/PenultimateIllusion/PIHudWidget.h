@@ -24,6 +24,12 @@ public:
 	UFUNCTION()
 	void InitializePartyHud(TArray<APIPBaseUnit*> partyToInit);
 
+	UFUNCTION()
+		void InitializeTargetingButtons();
+
+	UFUNCTION()
+		FText PassActionToUnit();
+
 	UPROPERTY()
 	FClickDelegate click;
 protected:
@@ -44,4 +50,10 @@ private:
 
 	UPROPERTY()
 	class APIPlayerController* controller;
+
+	UPROPERTY()
+		class APenultimateIllusionGameModeBase* gameMode;
+
+	UPROPERTY()
+		class APIAIController* aiController;
 };

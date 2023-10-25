@@ -15,7 +15,7 @@ void UPIHudWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
+	gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
 	//	if this case did not fail AKA is not null
 	if (gameMode != nullptr)
 	{
@@ -27,6 +27,13 @@ void UPIHudWidget::NativeConstruct()
 	{
 		controller->OnPartyInit.AddDynamic(this, &UPIHudWidget::InitializePartyHud);
 	}
+
+	aiController = Cast<APIAIController>(gameMode->GetAIController());
+	if (aiController != nullptr)
+	{
+
+	}
+
 
 	controller->OnPartyInit.Broadcast(controller->GetParty());
 }
@@ -50,6 +57,8 @@ void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
 		ParentObject->AddChild(skill);
 		InitializedButtons.Add(skill);
 
+		//	TODO: bind attack OnClick to show available targets-- show estimated damage
+		//	TODO: check if unit is taunted, if so, skip to just attacking the target
 		attack->OnClicked.AddDynamic(currentUnit, &APIPBaseUnit::NormalAttack);
 		//	TODO: bind attack OnClick to unit's auto attack
 		skill->OnClicked.AddDynamic(this, &UPIHudWidget::InitializeAvailableSkills);
@@ -88,4 +97,16 @@ void UPIHudWidget::InitializePartyHud(TArray<APIPBaseUnit*> partyToInit)
 			partyBar->PairNewUnit(partyToInit[i]);
 		}
 	}
+}
+
+void UPIHudWidget::InitializeTargetingButtons()
+{
+	//	TODO: implement button spawning for targeting each enemy
+	//	fuck how am I going to do this
+
+}
+
+FText UPIHudWidget::PassActionToUnit()
+{
+
 }

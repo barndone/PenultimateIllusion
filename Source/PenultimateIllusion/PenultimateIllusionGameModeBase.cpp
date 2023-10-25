@@ -64,3 +64,8 @@ void APenultimateIllusionGameModeBase::ActingUnitSwap()
 	OnActingUnitChange.Broadcast(ActingUnit);
 }
 
+APIAIController* APenultimateIllusionGameModeBase::GetAIController()
+{
+	return enemyController;
+}
+

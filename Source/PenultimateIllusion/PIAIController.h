@@ -14,7 +14,7 @@
 
 
 #include "PIAIController.generated.h"
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnVictory);
 /**
  * 
  */
@@ -41,6 +41,8 @@ public:
 	UFUNCTION()
 		TArray<APIPBaseUnit*> GetParty();
 
+	FOnVictory OnVictory;
+
 private:
 	//	list of possible enemies this controller can spawn per round
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
@@ -65,4 +67,9 @@ private:
 	UFUNCTION()
 		void PopulatePlayerPartyRef(TArray<APIPBaseUnit*> playerP);
 
+	UFUNCTION()
+		void HandlePartyMemberDeath();
+
+	UPROPERTY()
+		int DeadUnitCount = 0;
 };

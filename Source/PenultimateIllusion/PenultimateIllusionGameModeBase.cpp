@@ -80,9 +80,14 @@ void APenultimateIllusionGameModeBase::ActingUnitSwap()
 	OnActingUnitChange.Broadcast(ActingUnit);
 }
 
-bool APenultimateIllusionGameModeBase::CheckForBattleEnd() const
+void APenultimateIllusionGameModeBase::HandleDefeat()
 {
-	return false;
+
+}
+
+void APenultimateIllusionGameModeBase::HandleVictory()
+{
+
 }
 
 APIAIController* APenultimateIllusionGameModeBase::GetAIController()

@@ -9,6 +9,7 @@
 #include "PIPlayerController.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPartyInit, TArray<APIPBaseUnit*>, party);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDefeat);
 
 UCLASS()
 class PENULTIMATEILLUSION_API APIPlayerController : public APlayerController
@@ -27,6 +28,7 @@ public:
 	TArray<APIPBaseUnit*> GetParty();
 	bool ContainsUnit(APIPBaseUnit* unit);
 	FOnPartyInit OnPartyInit;
+	FOnDefeat OnDefeat;
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -47,4 +49,9 @@ private:
 		void AssignActiveUnit(APIPBaseUnit* unit);
 	UFUNCTION()
 	void InitializeParty();
+	UFUNCTION()
+		void HandlePartyMemberDeath();
+
+	UPROPERTY()
+		int DeadUnitCount = 0;
 };

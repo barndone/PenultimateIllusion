@@ -75,6 +75,7 @@ void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 		if (enemy != nullptr)
 		{
 			Party.Add(enemy);
+			enemy->OnUnitDeath.AddDynamic(this, &APIAIController::HandlePartyMemberDeath);
 		}
 	}
 
@@ -108,4 +109,13 @@ void APIAIController::MakeDecision()
 void APIAIController::PopulatePlayerPartyRef(TArray<APIPBaseUnit*> playerP)
 {
 	PlayerParty = playerP;
+}
+
+void APIAIController::HandlePartyMemberDeath()
+{
+	++DeadUnitCount;
+	if (DeadUnitCount >= Party.Num())
+	{
+		OnVictory.Broadcast();
+	}
 }

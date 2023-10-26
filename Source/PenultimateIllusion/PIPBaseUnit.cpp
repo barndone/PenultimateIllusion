@@ -31,8 +31,11 @@ void APIPBaseUnit::BeginPlay()
 // Called every frame
 void APIPBaseUnit::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-	GainCharge(DeltaTime);
+	if (!IsDead())
+	{
+		Super::Tick(DeltaTime);
+		GainCharge(DeltaTime);
+	}
 }
 
 void APIPBaseUnit::NormalAttack()
@@ -64,6 +67,7 @@ void APIPBaseUnit::TakeAction(UPIBaseAction* action)
 	CanAct = false;
 	AccumulatedTime = 0.0f;
 	Target = nullptr;
+
 	gameMode->RemoveUnitAfterAction(this);
 }
 
@@ -94,6 +98,7 @@ void APIPBaseUnit::ApplyDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit*
 
 	if (CurrentHealth <= 0)
 	{
+		OnUnitDeath.Broadcast();
 		gameMode->RemoveUnitAfterDeath(this);
 	}
 

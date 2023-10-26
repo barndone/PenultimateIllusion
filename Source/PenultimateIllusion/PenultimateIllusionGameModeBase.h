@@ -40,7 +40,10 @@ public:
 	void ActingUnitSwap();
 
 	UFUNCTION()
-		bool CheckForBattleEnd() const;
+		void HandleDefeat();
+
+	UFUNCTION()
+		void HandleVictory();
 
 	APIAIController* GetAIController();
 

@@ -49,6 +49,7 @@ void APIPlayerController::InitializeParty()
 		if (unit != nullptr)
 		{
 			Party.Add(unit);
+			unit->OnUnitDeath.AddDynamic(this, &APIPlayerController::HandlePartyMemberDeath);
 		}
 	}
 
@@ -63,4 +64,13 @@ TArray<APIPBaseUnit*> APIPlayerController::GetParty()
 bool APIPlayerController::ContainsUnit(APIPBaseUnit* unit)
 {
 	return Party.Contains(unit);
+}
+
+void APIPlayerController::HandlePartyMemberDeath()
+{
+	++DeadUnitCount;
+	if (DeadUnitCount >= Party.Num())
+	{
+		OnDefeat.Broadcast();
+	}
 }

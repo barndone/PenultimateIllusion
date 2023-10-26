@@ -11,6 +11,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnChargeUpdate, const float&, fillAmount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthUpdate, const int&, curHealth, const int&,  maxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUnitDeath);
 
 UCLASS()
 class PENULTIMATEILLUSION_API APIPBaseUnit : public AActor
@@ -73,6 +74,7 @@ public:
 
 	FOnHealthUpdate OnHealthUpdate;
 	FOnChargeUpdate OnChargeUpdate;
+	FOnUnitDeath OnUnitDeath;
 
 private:
 	//	the level of this unit

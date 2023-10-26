@@ -8,9 +8,8 @@
 #include "PIHudWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FClickDelegate);
-/**
- * 
- */
+
+
 UCLASS()
 class PENULTIMATEILLUSION_API UPIHudWidget : public UUserWidget
 {
@@ -25,13 +24,15 @@ public:
 	void InitializePartyHud(TArray<APIPBaseUnit*> partyToInit);
 
 	UFUNCTION()
-		void InitializeTargetingButtons();
+	void InitializeTargetingButtons(const UPIBaseAction* action);
 
 	UFUNCTION()
 		FText PassActionToUnit();
 
 	UPROPERTY()
 	FClickDelegate click;
+
+
 protected:
 	virtual void NativeConstruct() override;
 
@@ -56,4 +57,10 @@ private:
 
 	UPROPERTY()
 		class APIAIController* aiController;
+
+	void CleanUpButtons();
+	UFUNCTION()
+		UPIBaseAction* GetPairedAction(int index) const;
+	UFUNCTION()
+		void GetBasicAttackTargets();
 };

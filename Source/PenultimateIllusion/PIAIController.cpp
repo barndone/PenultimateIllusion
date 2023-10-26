@@ -32,7 +32,6 @@ APIAIController::~APIAIController()
 {
 	for (int i = 0; i < Decisions.Num(); i++)
 	{
-		//	figure out how to clean up this memory correctly
 		delete Decisions[i];
 	}
 

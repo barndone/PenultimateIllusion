@@ -34,12 +34,34 @@ void UPIHudWidget::NativeConstruct()
 
 	}
 
-
 	controller->OnPartyInit.Broadcast(controller->GetParty());
+}
+
+void UPIHudWidget::CleanUpButtons()
+{
+	for (int i = 0; i < InitializedButtons.Num(); ++i)
+	{
+		ParentObject->RemoveChild(InitializedButtons[i]);
+		InitializedButtons[i]->ConditionalBeginDestroy();
+	}
+
+	InitializedButtons.Empty();
+}
+
+UPIBaseAction* UPIHudWidget::GetPairedAction(int index) const
+{
+	return currentUnit->Actions[index];
+}
+
+void UPIHudWidget::GetBasicAttackTargets()
+{
+	InitializeTargetingButtons(currentUnit->BasicAttack);
 }
 
 void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
 {
+	CleanUpButtons();
+
 	if (controller->ContainsUnit(unit))
 	{
 		currentUnit = unit;
@@ -58,8 +80,8 @@ void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
 		InitializedButtons.Add(skill);
 
 		//	TODO: bind attack OnClick to show available targets-- show estimated damage
+		attack->OnClicked.AddDynamic(this, &UPIHudWidget::GetBasicAttackTargets);
 		//	TODO: check if unit is taunted, if so, skip to just attacking the target
-		attack->OnClicked.AddDynamic(currentUnit, &APIPBaseUnit::NormalAttack);
 		//	TODO: bind attack OnClick to unit's auto attack
 		skill->OnClicked.AddDynamic(this, &UPIHudWidget::InitializeAvailableSkills);
 	}
@@ -67,13 +89,7 @@ void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
 
 void UPIHudWidget::InitializeAvailableSkills()
 {
-	for(int i = 0; i < InitializedButtons.Num(); i++)
-	{
-		ParentObject->RemoveChild(InitializedButtons[i]);
-		InitializedButtons[i]->ConditionalBeginDestroy();
-	}
-
-	InitializedButtons.Empty();
+	CleanUpButtons();
 
 	for (int i = 0; i < currentUnit->Actions.Num(); i++)
 	{
@@ -99,14 +115,42 @@ void UPIHudWidget::InitializePartyHud(TArray<APIPBaseUnit*> partyToInit)
 	}
 }
 
-void UPIHudWidget::InitializeTargetingButtons()
+void UPIHudWidget::InitializeTargetingButtons(const UPIBaseAction* action)
 {
 	//	TODO: implement button spawning for targeting each enemy
-	//	fuck how am I going to do this
+	CleanUpButtons();
 
+	//	branch 1: target enemies
+	if (action->TargetEnemies)
+	{
+		for (int i = 0; i < gameMode->GetAIController()->Party.Num(); ++i)
+		{
+			UButton* button = NewObject<UButton>(UButton::StaticClass(), TEXT("Button"));
+			UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
+			ParentObject->AddChild(button);
+
+			title->SetText(FText::FromString(gameMode->GetAIController()->Party[i]->GetName()));
+			button->AddChild(title);
+			InitializedButtons.Add(button);
+		}
+	}
+	//	branch 2: target allies
+	else 
+	{
+		for (int i = 0; i < controller->GetParty().Num(); ++i)
+		{
+			UButton* button = NewObject<UButton>(UButton::StaticClass(), TEXT("Button"));
+			UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
+			ParentObject->AddChild(button);
+		
+			title->SetText(FText::FromString(controller->GetParty()[i]->GetName()));
+			button->AddChild(title);
+			InitializedButtons.Add(button);
+		}
+	}
 }
 
 FText UPIHudWidget::PassActionToUnit()
 {
-
+	return FText();
 }

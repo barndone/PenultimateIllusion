@@ -55,7 +55,7 @@ void APIAIController::BeginPlay()
 		playerController->OnPartyInit.AddDynamic(this, &APIAIController::PopulatePlayerPartyRef);
 	}
 
-	GenerateEnemyComp(1);
+	GenerateEnemyComp(gameMode->EnemiesToSpawn);
 }
 
 TArray<APIPBaseUnit*> APIAIController::GetParty()
@@ -69,11 +69,15 @@ void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 	//	HACK: placeholder implementation
 	//	TODO: integrate actual comp generation
 	//	TODO: Implement difficulty rating logic~
-	APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[0]));
-	if (enemy != nullptr)
+	for (int i = 0; i < difficultyRating; ++i)
 	{
-		Party.Add(enemy);
+		APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[0]));
+		if (enemy != nullptr)
+		{
+			Party.Add(enemy);
+		}
 	}
+
 }
 
 void APIAIController::AssignActiveUnit(APIPBaseUnit* unit)

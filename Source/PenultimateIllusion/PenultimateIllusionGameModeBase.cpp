@@ -58,10 +58,31 @@ void APenultimateIllusionGameModeBase::RemoveUnitAfterAction(APIPBaseUnit* unit)
 	}
 }
 
+void APenultimateIllusionGameModeBase::RemoveUnitAfterDeath(APIPBaseUnit* unit)
+{
+	if (ReadyUnits.Num() != 0)
+	{
+		ReadyUnits.Remove(unit);
+
+		if (ReadyUnits.Num() != 0)
+		{
+			if (ActingUnit == unit)
+			{
+				ActingUnitSwap();
+			}
+		}
+	}
+}
+
 void APenultimateIllusionGameModeBase::ActingUnitSwap()
 {
 	ActingUnit = ReadyUnits[0];
 	OnActingUnitChange.Broadcast(ActingUnit);
+}
+
+bool APenultimateIllusionGameModeBase::CheckForBattleEnd() const
+{
+	return false;
 }
 
 APIAIController* APenultimateIllusionGameModeBase::GetAIController()

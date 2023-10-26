@@ -35,7 +35,12 @@ public:
 	void AddReadyUnit(APIPBaseUnit* unit);
 	UFUNCTION()
 	void RemoveUnitAfterAction(APIPBaseUnit* unit);
+	UFUNCTION()
+		void RemoveUnitAfterDeath(APIPBaseUnit* unit);
 	void ActingUnitSwap();
+
+	UFUNCTION()
+		bool CheckForBattleEnd() const;
 
 	APIAIController* GetAIController();
 
@@ -51,4 +56,9 @@ private:
 
 	UPROPERTY()
 	APIAIController* enemyController;
+
+	bool GameOver = false;
+	bool Victory = false;
+
+
 };

@@ -41,38 +41,56 @@ void UPIHudWidget::CleanUpButtons()
 {
 	for (int i = 0; i < InitializedButtons.Num(); ++i)
 	{
-		ParentObject->RemoveChild(InitializedButtons[i]);
 		InitializedButtons[i]->ConditionalBeginDestroy();
+		ParentObject->RemoveChild(InitializedButtons[i]);
 	}
 
 	InitializedButtons.Empty();
 }
 
-UPIBaseAction* UPIHudWidget::GetPairedAction(int index) const
-{
-	return currentUnit->Actions[index];
-}
 
 void UPIHudWidget::GetBasicAttackTargets()
 {
+	currentAction = currentUnit->BasicAttack;
 	InitializeTargetingButtons(currentUnit->BasicAttack);
+}
+
+void UPIHudWidget::OnClick(UPIButton* button)
+{
+	if (button->TargetButton)
+	{
+		currentUnit->Target = button->GetTarget();
+		currentUnit->TakeAction(currentAction);
+	}
+	else
+	{
+		currentAction = button->GetAction();
+		InitializeTargetingButtons(currentAction);
+	}
 }
 
 void UPIHudWidget::HandleNewActingUnit(APIPBaseUnit* unit)
 {
 	CleanUpButtons();
+	currentAction = nullptr;
+
+	if (unit->IsDead())
+	{
+		gameMode->RemoveUnitAfterDeath(unit);
+		return;
+	}
 
 	if (controller->ContainsUnit(unit))
 	{
 		currentUnit = unit;
-		UButton* attack = NewObject<UButton>(UButton::StaticClass(), TEXT("attack"));
+		UPIButton* attack = NewObject<UPIButton>(UPIButton::StaticClass(), TEXT("attack"));
 		UTextBlock* attackTitle = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
 		attackTitle->SetText(FText::FromString("Attack"));
 		attack->AddChild(attackTitle);
 		ParentObject->AddChild(attack);
 		InitializedButtons.Add(attack);
 
-		UButton* skill = NewObject<UButton>(UButton::StaticClass(), TEXT("skill"));
+		UPIButton* skill = NewObject<UPIButton>(UPIButton::StaticClass(), TEXT("skill"));
 		UTextBlock* skillTitle = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
 		skillTitle->SetText(FText::FromString("Skills"));
 		skill->AddChild(skillTitle);
@@ -93,12 +111,19 @@ void UPIHudWidget::InitializeAvailableSkills()
 
 	for (int i = 0; i < currentUnit->Actions.Num(); i++)
 	{
-		UButton* button = NewObject<UButton>(UButton::StaticClass(), TEXT("Button"));
-		UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
+		UPIButton* button = NewObject<UPIButton>(UPIButton::StaticClass());
+		UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass());
 		ParentObject->AddChild(button);
+		
+		button->SkillButton = true;
+		button->action = currentUnit->Actions[i];
+
+		button->OnClicked.AddDynamic(button, &UPIButton::HandleClick);
+		button->OnPiClicked.AddDynamic(this, &UPIHudWidget::OnClick);
+
 		title->SetText(currentUnit->Actions[i]->SpellName);
 		button->AddChild(title);
-		InitializedButtons.Add(button);
+		InitializedButtons.AddUnique(button);
 	}
 }
 
@@ -117,7 +142,7 @@ void UPIHudWidget::InitializePartyHud(TArray<APIPBaseUnit*> partyToInit)
 
 void UPIHudWidget::InitializeTargetingButtons(const UPIBaseAction* action)
 {
-	//	TODO: implement button spawning for targeting each enemy
+	//TODO: fix lock if no valid target
 	CleanUpButtons();
 
 	//	branch 1: target enemies
@@ -125,13 +150,23 @@ void UPIHudWidget::InitializeTargetingButtons(const UPIBaseAction* action)
 	{
 		for (int i = 0; i < gameMode->GetAIController()->Party.Num(); ++i)
 		{
-			UButton* button = NewObject<UButton>(UButton::StaticClass(), TEXT("Button"));
-			UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
-			ParentObject->AddChild(button);
+			auto* unit = gameMode->GetAIController()->Party[i];
+			if (!unit->IsDead())
+			{
+				UPIButton* button = NewObject<UPIButton>(UPIButton::StaticClass());
+				UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass());
+				ParentObject->AddChild(button);
 
-			title->SetText(FText::FromString(gameMode->GetAIController()->Party[i]->GetName()));
-			button->AddChild(title);
-			InitializedButtons.Add(button);
+				title->SetText(FText::FromString(unit->GetName()));
+				button->AddChild(title);
+				InitializedButtons.Add(button);
+
+				button->TargetButton = true;
+				button->target = unit;
+				button->OnClicked.AddDynamic(button, &UPIButton::HandleClick);
+				button->OnPiClicked.AddDynamic(this, &UPIHudWidget::OnClick);
+			}
+
 		}
 	}
 	//	branch 2: target allies
@@ -139,18 +174,22 @@ void UPIHudWidget::InitializeTargetingButtons(const UPIBaseAction* action)
 	{
 		for (int i = 0; i < controller->GetParty().Num(); ++i)
 		{
-			UButton* button = NewObject<UButton>(UButton::StaticClass(), TEXT("Button"));
-			UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass(), TEXT("Title"));
-			ParentObject->AddChild(button);
+			auto* unit = controller->GetParty()[i];
+			if (!unit->IsDead())
+			{
+				UPIButton* button = NewObject<UPIButton>(UPIButton::StaticClass());
+				UTextBlock* title = NewObject<UTextBlock>(UTextBlock::StaticClass());
+				ParentObject->AddChild(button);
 		
-			title->SetText(FText::FromString(controller->GetParty()[i]->GetName()));
-			button->AddChild(title);
-			InitializedButtons.Add(button);
+				title->SetText(FText::FromString(unit->GetName()));
+				button->AddChild(title);
+				InitializedButtons.Add(button);
+
+				button->TargetButton = true;	
+				button->target = unit;
+				button->OnClicked.AddDynamic(button, &UPIButton::HandleClick);
+				button->OnPiClicked.AddDynamic(this, &UPIHudWidget::OnClick);
+			}
 		}
 	}
-}
-
-FText UPIHudWidget::PassActionToUnit()
-{
-	return FText();
 }

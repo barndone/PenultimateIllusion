@@ -92,6 +92,11 @@ void APIPBaseUnit::ApplyDamage(const UPIBaseDamageSpell& _ability, APIPBaseUnit*
 
 	CurrentHealth -= damageToTake;
 
+	if (CurrentHealth <= 0)
+	{
+		gameMode->RemoveUnitAfterDeath(this);
+	}
+
 	OnHealthUpdate.Broadcast(CurrentHealth, MaxHealth);
 }
 
@@ -165,7 +170,7 @@ void APIPBaseUnit::CalculateChargeMultiplier()
 	ChargeTime = ChargeTime - chargeMultiplier;
 }
 
-bool APIPBaseUnit::IsDead()
+bool APIPBaseUnit::IsDead() const
 {
 	return CurrentHealth <= 0;
 }

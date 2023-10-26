@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "PIPBaseUnit.h"
+#include "PIButton.h"
 #include "PIHudWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FClickDelegate);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnClick, APIPBaseUnit*, target);
 
 UCLASS()
 class PENULTIMATEILLUSION_API UPIHudWidget : public UUserWidget
@@ -22,15 +22,11 @@ public:
 	void InitializeAvailableSkills();
 	UFUNCTION()
 	void InitializePartyHud(TArray<APIPBaseUnit*> partyToInit);
-
 	UFUNCTION()
 	void InitializeTargetingButtons(const UPIBaseAction* action);
 
-	UFUNCTION()
-		FText PassActionToUnit();
-
 	UPROPERTY()
-	FClickDelegate click;
+	FOnClick Click;
 
 
 protected:
@@ -58,9 +54,12 @@ private:
 	UPROPERTY()
 		class APIAIController* aiController;
 
+	UPROPERTY()
+		class UPIBaseAction* currentAction;
+
 	void CleanUpButtons();
 	UFUNCTION()
-		UPIBaseAction* GetPairedAction(int index) const;
-	UFUNCTION()
 		void GetBasicAttackTargets();
+	UFUNCTION()
+		void OnClick(UPIButton* button);
 };

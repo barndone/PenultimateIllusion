@@ -32,7 +32,7 @@ public:
 		TArray<UPIBaseAction*> Actions;
 
 	UPROPERTY()
-		APIPBaseUnit* Target;
+	APIPBaseUnit* Target;
 
 
 
@@ -68,6 +68,8 @@ public:
 		void NormalAttack();
 	UFUNCTION()
 		void TakeAction(UPIBaseAction* action);
+	UFUNCTION()
+		bool IsDead() const;
 
 	FOnHealthUpdate OnHealthUpdate;
 	FOnChargeUpdate OnChargeUpdate;
@@ -114,5 +116,5 @@ private:
 	class APenultimateIllusionGameModeBase* gameMode;
 
 	void CalculateChargeMultiplier();
-	bool IsDead();
+
 };

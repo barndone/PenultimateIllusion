@@ -45,6 +45,9 @@ public:
 	UFUNCTION()
 		void HandleVictory();
 
+	UFUNCTION()
+		bool IsGameOver() const;
+
 	APIAIController* GetAIController();
 
 	UPROPERTY(BlueprintAssignable)
@@ -62,6 +65,4 @@ private:
 
 	bool GameOver = false;
 	bool Victory = false;
-
-
 };

@@ -19,6 +19,12 @@ void APenultimateIllusionGameModeBase::BeginPlay()
 	//	TODO: set up number of enemies to spawn/types/etc
 
 	enemyController = Cast<APIAIController>(GetWorld()->SpawnActor(BaseAIControllerAsset));
+	check(enemyController != nullptr && "EnemyController was null in GameMode, wtf?")
+	enemyController->OnVictory.AddDynamic(this, &APenultimateIllusionGameModeBase::HandleVictory);
+	auto* PC = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
+	check(PC != nullptr && "PlayerController was null in GameMode, wtf?");
+	PC->OnDefeat.AddDynamic(this, &APenultimateIllusionGameModeBase::HandleDefeat);
+
 }
 
 void APenultimateIllusionGameModeBase::AddReadyUnit(APIPBaseUnit* unit)
@@ -82,12 +88,22 @@ void APenultimateIllusionGameModeBase::ActingUnitSwap()
 
 void APenultimateIllusionGameModeBase::HandleDefeat()
 {
+	GameOver = true;
 
+	//	TODO: implement feedback
 }
 
 void APenultimateIllusionGameModeBase::HandleVictory()
 {
+	GameOver = true;
+	Victory = true;
 
+	//	TODO: implement feedback
+}
+
+bool APenultimateIllusionGameModeBase::IsGameOver() const
+{
+	return GameOver;
 }
 
 APIAIController* APenultimateIllusionGameModeBase::GetAIController()

@@ -44,16 +44,13 @@ void APIAIController::BeginPlay()
 
 	APenultimateIllusionGameModeBase* gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
 	//	if this case did not fail AKA is not null
-	if (gameMode != nullptr)
-	{
-		gameMode->OnActingUnitChange.AddDynamic(this, &APIAIController::AssignActiveUnit);
-	}
+	check(gameMode != nullptr && "GameMode Was Null on AIController")
+	gameMode->OnActingUnitChange.AddDynamic(this, &APIAIController::AssignActiveUnit);
 
 	APIPlayerController* playerController = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (playerController != nullptr)
-	{
-		playerController->OnPartyInit.AddDynamic(this, &APIAIController::PopulatePlayerPartyRef);
-	}
+	check(playerController != nullptr && "Playercontroller was null on AIController")
+	playerController->OnPartyInit.AddDynamic(this, &APIAIController::PopulatePlayerPartyRef);
+	
 
 	GenerateEnemyComp(gameMode->EnemiesToSpawn);
 }
@@ -72,11 +69,10 @@ void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 	for (int i = 0; i < difficultyRating; ++i)
 	{
 		APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[0]));
-		if (enemy != nullptr)
-		{
-			Party.Add(enemy);
-			enemy->OnUnitDeath.AddDynamic(this, &APIAIController::HandlePartyMemberDeath);
-		}
+		check(enemy != nullptr && "null instantiated enemy.... wtf?");
+		Party.Add(enemy);
+		enemy->OnUnitDeath.AddDynamic(this, &APIAIController::HandlePartyMemberDeath);
+		
 	}
 
 }

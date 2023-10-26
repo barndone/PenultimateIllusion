@@ -19,11 +19,9 @@ void APIPBaseUnit::BeginPlay()
 
 	gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
 	//	if this case did not fail AKA is not null
-	if (gameMode != nullptr)
-	{
-		ChargeTime = gameMode->BaseChargeTime;
-		CalculateChargeMultiplier();
-	}
+	check(gameMode != nullptr && "GameMode null on BaseUnit")
+	ChargeTime = gameMode->BaseChargeTime;
+	CalculateChargeMultiplier();
 	//	otherwise do nothing
 
 }
@@ -31,7 +29,7 @@ void APIPBaseUnit::BeginPlay()
 // Called every frame
 void APIPBaseUnit::Tick(float DeltaTime)
 {
-	if (!IsDead())
+	if (!IsDead() && !gameMode->IsGameOver())
 	{
 		Super::Tick(DeltaTime);
 		GainCharge(DeltaTime);
@@ -130,12 +128,8 @@ void APIPBaseUnit::GainCharge(float DeltaTime)
 		{
 			OnChargeUpdate.Broadcast(ChargeTime / ChargeTime);
 			CanAct = true;
-			
 
-			if (gameMode != nullptr)
-			{
-				gameMode->AddReadyUnit(this);
-			}
+			gameMode->AddReadyUnit(this);
 		}
 	}
 	else

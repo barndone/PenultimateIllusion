@@ -14,10 +14,8 @@ void APIPlayerController::BeginPlay()
 
 	gameMode = Cast<APenultimateIllusionGameModeBase>(GetWorld()->GetAuthGameMode());
 	//	if this case did not fail AKA is not null
-	if (gameMode != nullptr)
-	{
-		gameMode->OnActingUnitChange.AddDynamic(this, &APIPlayerController::AssignActiveUnit);
-	}
+	check(gameMode!= nullptr && "GameMode null on PlayerController.... wtf?")
+	gameMode->OnActingUnitChange.AddDynamic(this, &APIPlayerController::AssignActiveUnit);
 
 	InitializeParty();
 }
@@ -46,11 +44,10 @@ void APIPlayerController::InitializeParty()
 	for (int i = 0; i < MaxPartyCount; i++)
 	{
 		APIPBaseUnit* unit = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(BaseUnitBPAsset));
-		if (unit != nullptr)
-		{
-			Party.Add(unit);
-			unit->OnUnitDeath.AddDynamic(this, &APIPlayerController::HandlePartyMemberDeath);
-		}
+		check(unit != nullptr && "Somehow instantiated null party member...")
+		Party.Add(unit);
+		unit->OnUnitDeath.AddDynamic(this, &APIPlayerController::HandlePartyMemberDeath);
+		
 	}
 
 	OnPartyInit.Broadcast(Party);

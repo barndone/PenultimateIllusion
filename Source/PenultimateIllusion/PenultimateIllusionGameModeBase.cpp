@@ -4,6 +4,7 @@
 #include "PenultimateIllusionGameModeBase.h"
 #include "PIBattleHud.h"
 #include "PIPlayerController.h"
+#include "PIGameInstance.h"
 
 APenultimateIllusionGameModeBase::APenultimateIllusionGameModeBase()
 {
@@ -16,15 +17,27 @@ void APenultimateIllusionGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//	TODO: set up number of enemies to spawn/types/etc
+	//	attempt to cast to Custom game instance
+	auto instance = Cast<UPIGameInstance>(GetWorld()->GetGameInstance());
+	check(instance != nullptr && "Game instance was null... wtf");
+	//	generate map for traversal if one doesn't exist
+	if (instance->LevelMap == nullptr)
+	{
+		instance->GenerateMap();
+	}
+	//	assign max difficulty to the current node
+	MaxDifficulty = instance->LevelMap->GetCurrentNode()->NodeDifficulty;
 
+	//	generate the AI controller
 	enemyController = Cast<APIAIController>(GetWorld()->SpawnActor(BaseAIControllerAsset));
-	check(enemyController != nullptr && "EnemyController was null in GameMode, wtf?")
+	check(enemyController != nullptr && "EnemyController was null in GameMode, wtf?");
+	//	subscribe to OnVictory event
 	enemyController->OnVictory.AddDynamic(this, &APenultimateIllusionGameModeBase::HandleVictory);
+	
 	auto* PC = Cast<APIPlayerController>(GetWorld()->GetFirstPlayerController());
 	check(PC != nullptr && "PlayerController was null in GameMode, wtf?");
+	//	subscribe to OnDefeat event
 	PC->OnDefeat.AddDynamic(this, &APenultimateIllusionGameModeBase::HandleDefeat);
-
 }
 
 void APenultimateIllusionGameModeBase::AddReadyUnit(APIPBaseUnit* unit)

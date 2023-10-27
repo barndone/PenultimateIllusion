@@ -68,13 +68,14 @@ void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 		APIPBaseUnit* cdoEnemy = Cast< APIPBaseUnit>(PossibleEnemyBP[j]->GetDefaultObject());
 		check(cdoEnemy != nullptr && "Invalid entry in PossibleEnemyBP TArray on PIAIController");
 		difficultyRatings.Add(cdoEnemy->GetDifficultyRating());
-
 	}
 
 	int currentDifficulty = 0;
 
 	for (int i = 0; (i < difficultyRating) && (currentDifficulty < difficultyRating); ++i)
 	{
+
+		//TODO: handle if we can't generate an enemy at a needed rating while the currentDifficulty is not at the max
 
 		if (difficultyRating - currentDifficulty == 0)
 		{

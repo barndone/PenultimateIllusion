@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "PIDifficultyRatingDAG.h"
 #include "PIGameInstance.generated.h"
 
 /**
@@ -16,5 +17,10 @@ UCLASS()
 class PENULTIMATEILLUSION_API UPIGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
+public:
+	PIDifficultyRatingDAG* LevelMap;
 	
+	UFUNCTION()
+		void GenerateMap();
 };

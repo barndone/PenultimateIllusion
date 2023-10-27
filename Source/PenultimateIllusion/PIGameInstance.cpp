@@ -3,3 +3,8 @@
 
 #include "PIGameInstance.h"
 
+void UPIGameInstance::GenerateMap()
+{
+	LevelMap = new PIDifficultyRatingDAG();
+	LevelMap->GenerateGameMap();
+}

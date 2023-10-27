@@ -62,28 +62,21 @@ TArray<APIPBaseUnit*> APIAIController::GetParty()
 
 void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 {
-	//	TODO: integrate actual comp generation
-	//	TODO: Implement difficulty rating logic~
-
 	TArray<int> difficultyRatings;
 	for(int j = 0; j < PossibleEnemyBP.Num(); ++j)
 	{
-		APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[j]));
-		check(enemy != nullptr && "Invalid entry in PossibleEnemyBP TArray on PIAIController");
-		difficultyRatings.Add(enemy->GetDifficultyRating());
+		APIPBaseUnit* cdoEnemy = Cast< APIPBaseUnit>(PossibleEnemyBP[j]->GetDefaultObject());
+		check(cdoEnemy != nullptr && "Invalid entry in PossibleEnemyBP TArray on PIAIController");
+		difficultyRatings.Add(cdoEnemy->GetDifficultyRating());
+
 	}
 
 	int currentDifficulty = 0;
 
-	for (int i = 0; (i < difficultyRating) && (currentDifficulty <= difficultyRating); ++i)
+	for (int i = 0; (i < difficultyRating) && (currentDifficulty < difficultyRating); ++i)
 	{
 
-	//		if (currentDifficulty >= difficultyRating)
-	//		{
-	//			return;
-	//		}
-
-		if (difficultyRating - currentDifficulty <= 0)
+		if (difficultyRating - currentDifficulty == 0)
 		{
 			return;
 		}

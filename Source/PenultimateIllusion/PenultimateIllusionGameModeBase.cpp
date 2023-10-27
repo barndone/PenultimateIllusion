@@ -103,13 +103,17 @@ void APenultimateIllusionGameModeBase::HandleDefeat()
 {
 	GameOver = true;
 
-	//	TODO: implement feedback
+	APIBattleHud* hud = Cast<APIBattleHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	hud->SwapHUD();
 }
 
 void APenultimateIllusionGameModeBase::HandleVictory()
 {
 	GameOver = true;
 	Victory = true;
+
+	APIBattleHud* hud = Cast<APIBattleHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	hud->SwapHUD();
 
 	//	TODO: implement feedback
 }

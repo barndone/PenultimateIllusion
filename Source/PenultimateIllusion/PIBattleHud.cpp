@@ -3,14 +3,28 @@
 
 #include "PIBattleHud.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/SlateWrapperTypes.h"
+
+void APIBattleHud::SwapHUD()
+{
+	BattleWidget->SetVisibility(ESlateVisibility::Hidden);
+	EndWidget->SetVisibility(ESlateVisibility::Visible);
+}
 
 void APIBattleHud::BeginPlay()
 {
 	Super::BeginPlay();
-	UUserWidget* rootWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetHUDClass);
+	UUserWidget* battleWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetHUDClass);
+	battleWidget->SetOwningPlayer(GetOwningPlayerController());
+	battleWidget->AddToPlayerScreen();
 
-	rootWidget->SetOwningPlayer(GetOwningPlayerController());
-	rootWidget->AddToPlayerScreen();
+	BattleWidget = battleWidget;
+	BattleWidget->SetVisibility(ESlateVisibility::Visible);
 
-	RootWidget = rootWidget;
+	UUserWidget* endWidget = CreateWidget<UUserWidget>(GetWorld(), EndScreenClass);
+	endWidget->SetOwningPlayer(GetOwningPlayerController());
+	endWidget->AddToPlayerScreen();
+
+	EndWidget = endWidget;
+	EndWidget->SetVisibility(ESlateVisibility::Hidden);
 }

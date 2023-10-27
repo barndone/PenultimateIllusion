@@ -14,6 +14,8 @@ class PENULTIMATEILLUSION_API APIBattleHud : public AHUD
 {
 	GENERATED_BODY()
 	
+public:
+	void SwapHUD();
 
 protected:
 	virtual void BeginPlay() override;
@@ -21,7 +23,13 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
 		TSubclassOf<UUserWidget> WidgetHUDClass;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
+		TSubclassOf<UUserWidget> EndScreenClass;
+
 
 	UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess=true))
-		UUserWidget* RootWidget;
+		UUserWidget* BattleWidget;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+		UUserWidget* EndWidget;
 };

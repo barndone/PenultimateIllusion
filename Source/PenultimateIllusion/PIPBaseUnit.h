@@ -72,6 +72,9 @@ public:
 	UFUNCTION()
 		bool IsDead() const;
 
+	UFUNCTION()
+		int GetDifficultyRating() const;
+
 	FOnHealthUpdate OnHealthUpdate;
 	FOnChargeUpdate OnChargeUpdate;
 	FOnUnitDeath OnUnitDeath;
@@ -114,6 +117,9 @@ private:
 	bool CanAct = false;
 	bool IsHealer = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats", meta = (AllowPrivateAccess = true))
+	int DifficultyValue = 1;
+	
 	UPROPERTY()
 	class APenultimateIllusionGameModeBase* gameMode;
 

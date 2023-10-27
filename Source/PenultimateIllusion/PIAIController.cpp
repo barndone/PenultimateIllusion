@@ -52,7 +52,7 @@ void APIAIController::BeginPlay()
 	playerController->OnPartyInit.AddDynamic(this, &APIAIController::PopulatePlayerPartyRef);
 	
 
-	GenerateEnemyComp(gameMode->EnemiesToSpawn);
+	GenerateEnemyComp(gameMode->MaxDifficulty);
 }
 
 TArray<APIPBaseUnit*> APIAIController::GetParty()
@@ -62,19 +62,52 @@ TArray<APIPBaseUnit*> APIAIController::GetParty()
 
 void APIAIController::GenerateEnemyComp(const int& difficultyRating)
 {
-	
-	//	HACK: placeholder implementation
 	//	TODO: integrate actual comp generation
 	//	TODO: Implement difficulty rating logic~
-	for (int i = 0; i < difficultyRating; ++i)
+
+	TArray<int> difficultyRatings;
+	for(int j = 0; j < PossibleEnemyBP.Num(); ++j)
 	{
-		APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[0]));
-		check(enemy != nullptr && "null instantiated enemy.... wtf?");
-		Party.Add(enemy);
-		enemy->OnUnitDeath.AddDynamic(this, &APIAIController::HandlePartyMemberDeath);
-		
+		APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[j]));
+		check(enemy != nullptr && "Invalid entry in PossibleEnemyBP TArray on PIAIController");
+		difficultyRatings.Add(enemy->GetDifficultyRating());
 	}
 
+	int currentDifficulty = 0;
+
+	for (int i = 0; (i < difficultyRating) && (currentDifficulty <= difficultyRating); ++i)
+	{
+
+	//		if (currentDifficulty >= difficultyRating)
+	//		{
+	//			return;
+	//		}
+
+		if (difficultyRating - currentDifficulty <= 0)
+		{
+			return;
+		}
+
+		currentDifficulty += GenerateEnemy(difficultyRating - currentDifficulty, difficultyRatings);
+	}
+}
+
+
+int APIAIController::GenerateEnemy(const int& maxDifficulty, const TArray<int>& ratings)
+{	
+	bool validRating = false;
+	int index = 0;
+	do
+	{
+		validRating = ValidateDifficultyRating(maxDifficulty, ratings, index);
+	} while (!validRating);
+
+	//	spawn actor
+	APIPBaseUnit* enemy = Cast<APIPBaseUnit>(GetWorld()->SpawnActor(PossibleEnemyBP[index]));
+	check(enemy != nullptr && "null instantiated enemy.... wtf?");
+	Party.Add(enemy);
+	enemy->OnUnitDeath.AddDynamic(this, &APIAIController::HandlePartyMemberDeath);
+	return enemy->GetDifficultyRating();
 }
 
 void APIAIController::AssignActiveUnit(APIPBaseUnit* unit)
@@ -113,5 +146,21 @@ void APIAIController::HandlePartyMemberDeath()
 	if (DeadUnitCount >= Party.Num())
 	{
 		OnVictory.Broadcast();
+	}
+}
+
+bool APIAIController::ValidateDifficultyRating(const int& maxDifficulty, const TArray<int>& ratings, int& index) const
+{
+	int curValue = rand() % (maxDifficulty + 1);
+
+	if (ratings.Contains(curValue))
+	{
+		auto pos = ratings.Find(curValue);
+		index = pos;
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }

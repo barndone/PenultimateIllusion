@@ -174,6 +174,11 @@ bool APIPBaseUnit::IsDead() const
 	return CurrentHealth <= 0;
 }
 
+int APIPBaseUnit::GetDifficultyRating() const
+{
+	return DifficultyValue;
+}
+
 int APIPBaseUnit::GetCurrentHealth()
 {
 	return CurrentHealth;

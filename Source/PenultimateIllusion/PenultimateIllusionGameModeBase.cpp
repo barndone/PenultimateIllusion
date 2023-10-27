@@ -106,7 +106,7 @@ bool APenultimateIllusionGameModeBase::IsGameOver() const
 	return GameOver;
 }
 
-APIAIController* APenultimateIllusionGameModeBase::GetAIController()
+APIAIController* APenultimateIllusionGameModeBase::GetAIController() const
 {
 	return enemyController;
 }

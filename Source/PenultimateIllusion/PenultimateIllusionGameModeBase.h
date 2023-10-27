@@ -16,6 +16,7 @@ class PENULTIMATEILLUSION_API APenultimateIllusionGameModeBase : public AGameMod
 	GENERATED_BODY()
 
 public:
+	//	TODO: make all of these fields private
 	UPROPERTY(EditAnywhere)
 	float BaseChargeTime = 3.0f;
 	UPROPERTY(EditAnywhere)
@@ -27,7 +28,7 @@ public:
 
 
 	UPROPERTY(EditAnywhere)
-	int EnemiesToSpawn;
+	int MaxDifficulty = 3;
 
 	APenultimateIllusionGameModeBase();
 
@@ -48,7 +49,7 @@ public:
 	UFUNCTION()
 		bool IsGameOver() const;
 
-	APIAIController* GetAIController();
+	APIAIController* GetAIController() const;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnActingUnitChange OnActingUnitChange;

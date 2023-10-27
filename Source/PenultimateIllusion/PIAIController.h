@@ -58,6 +58,10 @@ private:
 
 	UFUNCTION()
 	void GenerateEnemyComp(const int& difficultyRating);
+	
+	UFUNCTION()
+	int GenerateEnemy(const int& maxDifficulty, const TArray<int>& ratings);
+	
 	UFUNCTION()
 	void AssignActiveUnit(APIPBaseUnit* unit);
 
@@ -72,4 +76,6 @@ private:
 
 	UPROPERTY()
 		int DeadUnitCount = 0;
+
+	bool ValidateDifficultyRating(const int& maxDifficulty, const TArray<int>& ratings, int& index) const;
 };

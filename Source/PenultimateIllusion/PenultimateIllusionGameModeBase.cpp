@@ -114,8 +114,6 @@ void APenultimateIllusionGameModeBase::HandleVictory()
 
 	APIBattleHud* hud = Cast<APIBattleHud>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	hud->SwapHUD();
-
-	//	TODO: implement feedback
 }
 
 bool APenultimateIllusionGameModeBase::IsGameOver() const

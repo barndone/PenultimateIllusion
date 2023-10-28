@@ -5,6 +5,7 @@
 #include "PIGameInstance.h"
 #include "PIBattleSelectButton.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 void UPIEndWidget::InitializeLevelSelectButtons()
 {
@@ -38,6 +39,7 @@ void UPIEndWidget::InitializeLevelSelectButtons()
 void UPIEndWidget::OnClick(UPIBattleSelectButton* passedButton)
 {
 	instance->LevelMap->UpdateCurrentNode(passedButton->GetPairedNode());
+	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("TestMap")));
 }
 
 void UPIEndWidget::NativeConstruct()

@@ -125,7 +125,6 @@ void UPIHudWidget::InitializeAvailableSkills()
 		button->AddChild(title);
 		InitializedButtons.AddUnique(button);
 	}
-	auto meow = 0;
 }
 
 void UPIHudWidget::InitializePartyHud(TArray<APIPBaseUnit*> partyToInit)

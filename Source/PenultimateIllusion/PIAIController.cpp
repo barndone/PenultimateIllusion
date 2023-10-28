@@ -94,6 +94,22 @@ int APIAIController::GenerateEnemy(const int& maxDifficulty, const TArray<int>& 
 	do
 	{
 		validRating = ValidateDifficultyRating(maxDifficulty, ratings, index);
+
+		bool earlyExit = true;
+
+		for (int i = 0; i < ratings.Num(); ++i)
+		{
+			if (maxDifficulty >= ratings[i])
+			{
+				earlyExit = false;
+			}
+		}
+		
+		if (earlyExit)
+		{
+			return 0;
+		}
+
 	} while (!validRating);
 
 	//	spawn actor
